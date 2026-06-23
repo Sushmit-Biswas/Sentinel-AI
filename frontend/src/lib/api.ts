@@ -130,11 +130,15 @@ export async function fetchPredictionTimeline() {
     if (!res.ok) throw new Error();
     return await res.json();
   } catch (e) {
-    return [
-      { hour: 8, risk_factor: 1.2 },
-      { hour: 12, risk_factor: 2.1 },
-      { hour: 18, risk_factor: 3.5 }
-    ];
+    return {
+      timeline: [
+        { offset_hours: 0, target_hour: 12, target_day: 1, target_day_name: 'Mon', label: 'NOW', time_label: '12:00', expected_violations: 24500, avg_cis: 3.5, risk_level: 'high' },
+        { offset_hours: 2, target_hour: 14, target_day: 1, target_day_name: 'Mon', label: '+2h', time_label: '14:00', expected_violations: 26000, avg_cis: 3.8, risk_level: 'high' },
+        { offset_hours: 4, target_hour: 16, target_day: 1, target_day_name: 'Mon', label: '+4h', time_label: '16:00', expected_violations: 28000, avg_cis: 4.1, risk_level: 'critical' },
+        { offset_hours: 6, target_hour: 18, target_day: 1, target_day_name: 'Mon', label: '+6h', time_label: '18:00', expected_violations: 22000, avg_cis: 3.9, risk_level: 'high' },
+        { offset_hours: 8, target_hour: 20, target_day: 1, target_day_name: 'Mon', label: '+8h', time_label: '20:00', expected_violations: 18000, avg_cis: 3.6, risk_level: 'medium' }
+      ]
+    };
   }
 }
 
