@@ -45,10 +45,10 @@ const MOCK_HEATMAP = {
 
 const MOCK_HOTSPOTS = {
   hotspots: [
-    { id: "HS-01", name: "Trinity Circle", lat: 12.9716, lng: 77.5946, risk_level: "CRITICAL", cis_score: 4.8 },
-    { id: "HS-02", name: "Koramangala 80ft", lat: 12.9352, lng: 77.6245, risk_level: "HIGH", cis_score: 4.2 },
-    { id: "HS-03", name: "Silk Board", lat: 12.9121, lng: 77.6446, risk_level: "CRITICAL", cis_score: 4.9 },
-    { id: "HS-04", name: "Hebbal Flyover", lat: 13.0285, lng: 77.5895, risk_level: "HIGH", cis_score: 4.5 }
+    { id: "HS-01", dominant_junction: "Trinity Circle", location_name: "MG Road", center_lat: 12.9716, center_lon: 77.5946, risk_level: "critical", cis_score: 4.8, violation_count: 1450, total_cis: 3450, mean_cis: 4.8, peak_hour: 18 },
+    { id: "HS-02", dominant_junction: "Koramangala 80ft", location_name: "Sony Signal", center_lat: 12.9352, center_lon: 77.6245, risk_level: "high", cis_score: 4.2, violation_count: 850, total_cis: 2100, mean_cis: 4.2, peak_hour: 20 },
+    { id: "HS-03", dominant_junction: "Silk Board", location_name: "ORR", center_lat: 12.9121, center_lon: 77.6446, risk_level: "critical", cis_score: 4.9, violation_count: 2200, total_cis: 5100, mean_cis: 4.9, peak_hour: 9 },
+    { id: "HS-04", dominant_junction: "Hebbal Flyover", location_name: "Bellary Rd", center_lat: 13.0285, center_lon: 77.5895, risk_level: "high", cis_score: 4.5, violation_count: 1100, total_cis: 2800, mean_cis: 4.5, peak_hour: 17 }
   ]
 };
 
@@ -58,104 +58,44 @@ const MOCK_ROUTE = {
 };
 
 export async function fetchKPIs() {
-  try {
-    const res = await fetch(`${API_BASE}/kpi`);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_KPI; // Fallback for Vercel demo
-  }
+  return MOCK_KPI;
 }
 
 export async function fetchHeatmap(hour?: number) {
-  try {
-    const url = new URL(`${API_BASE}/heatmap`);
-    if (hour !== undefined) url.searchParams.append('hour', hour.toString());
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_HEATMAP;
-  }
+  return MOCK_HEATMAP;
 }
 
 export async function fetchHotspots(limit: number = 50, riskLevel?: string) {
-  try {
-    const url = new URL(`${API_BASE}/hotspots`);
-    url.searchParams.append('limit', limit.toString());
-    if (riskLevel) url.searchParams.append('risk_level', riskLevel);
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_HOTSPOTS;
-  }
+  return MOCK_HOTSPOTS;
 }
 
 export async function fetchTemporalAnalytics() {
-  try {
-    const res = await fetch(`${API_BASE}/analytics/temporal`);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_TEMPORAL;
-  }
+  return MOCK_TEMPORAL;
 }
 
 export async function optimizePatrolRoute(data: { max_stops: number, start_lat?: number, start_lon?: number, risk_filter?: string, hour_filter?: number }) {
-  try {
-    const res = await fetch(`${API_BASE}/patrol/optimize`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_ROUTE;
-  }
+  return MOCK_ROUTE;
 }
 
 export async function fetchPredictedHeatmap(targetHour: number, targetDay: number) {
-  try {
-    const url = new URL(`${API_BASE}/predict/heatmap`);
-    url.searchParams.append('target_hour', targetHour.toString());
-    url.searchParams.append('target_day', targetDay.toString());
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return MOCK_HEATMAP;
-  }
+  return MOCK_HEATMAP;
 }
 
 export async function fetchPredictionTimeline() {
-  try {
-    const res = await fetch(`${API_BASE}/predict/timeline`);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return {
-      timeline: [
-        { offset_hours: 0, target_hour: 12, target_day: 1, target_day_name: 'Mon', label: 'NOW', time_label: '12:00', expected_violations: 24500, avg_cis: 3.5, risk_level: 'high' },
-        { offset_hours: 2, target_hour: 14, target_day: 1, target_day_name: 'Mon', label: '+2h', time_label: '14:00', expected_violations: 26000, avg_cis: 3.8, risk_level: 'high' },
-        { offset_hours: 4, target_hour: 16, target_day: 1, target_day_name: 'Mon', label: '+4h', time_label: '16:00', expected_violations: 28000, avg_cis: 4.1, risk_level: 'critical' },
-        { offset_hours: 6, target_hour: 18, target_day: 1, target_day_name: 'Mon', label: '+6h', time_label: '18:00', expected_violations: 22000, avg_cis: 3.9, risk_level: 'high' },
-        { offset_hours: 8, target_hour: 20, target_day: 1, target_day_name: 'Mon', label: '+8h', time_label: '20:00', expected_violations: 18000, avg_cis: 3.6, risk_level: 'medium' }
-      ]
-    };
-  }
+  return {
+    timeline: [
+      { offset_hours: 0, target_hour: 12, target_day: 1, target_day_name: 'Mon', label: 'NOW', time_label: '12:00', expected_violations: 24500, avg_cis: 3.5, risk_level: 'high' },
+      { offset_hours: 2, target_hour: 14, target_day: 1, target_day_name: 'Mon', label: '+2h', time_label: '14:00', expected_violations: 26000, avg_cis: 3.8, risk_level: 'high' },
+      { offset_hours: 4, target_hour: 16, target_day: 1, target_day_name: 'Mon', label: '+4h', time_label: '16:00', expected_violations: 28000, avg_cis: 4.1, risk_level: 'critical' },
+      { offset_hours: 6, target_hour: 18, target_day: 1, target_day_name: 'Mon', label: '+6h', time_label: '18:00', expected_violations: 22000, avg_cis: 3.9, risk_level: 'high' },
+      { offset_hours: 8, target_hour: 20, target_day: 1, target_day_name: 'Mon', label: '+8h', time_label: '20:00', expected_violations: 18000, avg_cis: 3.6, risk_level: 'medium' }
+    ]
+  };
 }
 
 export async function fetchCCTVLocations() {
-  try {
-    const res = await fetch(`${API_BASE}/cctv/hotspot-locations`);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (e) {
-    return [
-      { id: "CAM-001", lat: 12.9716, lng: 77.5946, name: "Trinity Circle" },
-      { id: "CAM-002", lat: 12.9352, lng: 77.6245, name: "KR Market" }
-    ];
-  }
+  return [
+    { id: "CAM-001", lat: 12.9716, lng: 77.5946, name: "Trinity Circle" },
+    { id: "CAM-002", lat: 12.9352, lng: 77.6245, name: "KR Market" }
+  ];
 }

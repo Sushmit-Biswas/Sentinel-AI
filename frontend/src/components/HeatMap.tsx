@@ -41,6 +41,13 @@ export default function HeatMap({ points, hotspots = [] }: HeatMapProps) {
         subdomains: 'abcd',
         maxZoom: 19
       }).addTo(mapInstance.current);
+
+      // Fix for IndexSizeError on 0-width canvas
+      setTimeout(() => {
+        if (mapInstance.current) {
+          mapInstance.current.invalidateSize();
+        }
+      }, 250);
     }
 
     const L = require('leaflet');
@@ -70,6 +77,8 @@ export default function HeatMap({ points, hotspots = [] }: HeatMapProps) {
     
     if (hotspots && hotspots.length > 0) {
       hotspots.forEach(hs => {
+        if (!hs.center_lat || !hs.center_lon) return; // Prevent Invalid LatLng Error
+        
         const color = hs.risk_level === 'critical' ? '#ef4444' : 
                       hs.risk_level === 'high' ? '#f97316' : 
                       hs.risk_level === 'medium' ? '#eab308' : '#3b82f6';
